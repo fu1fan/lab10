@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/lab10">
+        <file>src/logo.png</file>
+        <file>src/alpha-logo.png</file>
+    </qresource>
+</RCC>
