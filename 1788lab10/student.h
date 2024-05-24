@@ -1,9 +1,9 @@
 #pragma once
 
-#include <QMainWindow>
+#include <QWidget>
 #include "ui_student.h"
 
-class Student : public QMainWindow
+class Student : public QWidget
 {
 	Q_OBJECT
 

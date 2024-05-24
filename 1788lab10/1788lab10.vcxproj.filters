@@ -52,10 +52,10 @@
     <ClCompile Include="setting.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="student.cpp">
+    <ClCompile Include="input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="input.cpp">
+    <ClCompile Include="student.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -85,10 +85,10 @@
     <QtMoc Include="setting.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="student.h">
+    <QtMoc Include="input.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="input.h">
+    <QtMoc Include="student.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -102,10 +102,10 @@
     <QtUic Include="setting.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="student.ui">
+    <QtUic Include="input.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="input.ui">
+    <QtUic Include="student.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

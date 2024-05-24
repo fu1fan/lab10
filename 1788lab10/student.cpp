@@ -1,7 +1,7 @@
-#include "student.h"
+﻿#include "student.h"
 
 Student::Student(QWidget *parent)
-	: QMainWindow(parent)
+	: QWidget(parent)
 {
 	ui.setupUi(this);
 }

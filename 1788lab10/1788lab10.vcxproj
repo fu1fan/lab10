@@ -114,9 +114,9 @@
   <ItemGroup>
     <ClInclude Include="common.h" />
     <ClInclude Include="data.hpp" />
+    <QtMoc Include="student.h" />
     <QtMoc Include="input.h" />
     <ClInclude Include="login.hpp" />
-    <QtMoc Include="student.h" />
     <QtMoc Include="setting.h" />
     <QtMoc Include="overview.h" />
     <QtMoc Include="mainWindow.h" />
