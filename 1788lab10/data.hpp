@@ -261,11 +261,21 @@ public:
 		return (*performance)[student_id.key()][0];
 	}
 	int get_score(std::string student_id, std::string subject_id, std::string item_name) {
-		return (*performance)[student_id][1][subject_id][item_name];
+		try {
+			return (*performance)[student_id][1][subject_id][item_name];
+		}
+		catch (json::out_of_range) {
+			return -1;
+		}
 	}
 	int get_score(json::iterator student_id, std::string subject_id, std::string item_name) {
 		auto t = student_id.key();
-		return (*performance)[student_id.key()][1][subject_id][item_name];
+		try {
+			return (*performance)[student_id.key()][1][subject_id][item_name];
+		}
+		catch (json::out_of_range) {
+			return -1;
+		}
 	}
 	json::iterator begin() {
 		return performance->begin();
@@ -290,7 +300,11 @@ public:
 		float total_score = 0;
 		float total_weight = 0;
 		for (std::map<std::string, int>::iterator it = items.begin(); it != items.end(); ++it) {
-			total_score += get_score(student_id, subject_id, it->first) * it->second;
+			int socre = get_score(student_id, subject_id, it->first);
+			if (socre == -1) {
+				return -1;
+			}
+			total_score += socre * it->second;
 			total_weight += it->second;
 		}
 		return total_score / total_weight;
