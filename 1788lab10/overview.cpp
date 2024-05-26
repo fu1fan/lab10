@@ -1,6 +1,7 @@
 #include "overview.h"
 #include "common.h"
 #include <string>
+#include <algorithm>
 
 const QStringList Overview::categories = { "0-60", "60-70", "70-80", "80-90", "90-100" };
 
@@ -73,9 +74,17 @@ void Overview::update_data()
 		counts[i] = 0;
 	}
 	string subject_it = subjects_db->get_subject_id(ui.subjectBox->currentIndex());
+	float average = 0;
+	float max = 0;
+	float min = 100;
+	float median = 0;
+	int count = 0;
 	for (json::iterator it = performance_db->begin(); it != performance_db->end(); ++it)
 	{
 		float score = performance_db->calculate_score(it, subject_it);
+		if (score == -1) {
+			continue;
+		}
 		if (score < 60)
 		{
 			counts[0]++;
@@ -96,7 +105,20 @@ void Overview::update_data()
 		{
 			counts[4]++;
 		}
+		count++;
+		average = average + score;
+		if (score > max)
+		{
+			max = score;
+		}
+		if (score < min)
+		{
+			min = score;
+		}
+
 	}
+	average = average / count;
+
 	axisY->setRange(0, (int)(*std::max_element(counts, counts + 10) * 1.2) + 1);
 	
 	// 给set0重新赋值
@@ -104,4 +126,16 @@ void Overview::update_data()
 	*set0 << counts[0] << counts[1] << counts[2] << counts[3] << counts[4];
 	
 	this->chart->update();
+
+
+	// 更新文字信息
+	
+	ui.summaryLabel->setText("科目：" + ui.subjectBox->currentText() + "\n"
+		+ "平均分：" + QString::number(average) + "\n"
+		+ "最高分：" + QString::number(max) + "\n"
+		+ "最低分：" + QString::number(min) + "\n"
+		+ "人数：" + QString::number(count) + "\n"
+		+ "及格率：" + QString::number((counts[1] + counts[2] + counts[3] + counts[4]) / count * 100) + "%\n"
+		+ "优秀率：" + QString::number(counts[4] / count * 100) + "%\n"
+		+ "不及格率：" + QString::number(counts[0] / count * 100) + "%\n");
 }
