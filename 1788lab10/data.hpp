@@ -47,7 +47,7 @@ public:
 		std::ofstream o("accounts.json");
 		o << *accounts;
 	}
-	bool login_verify(std::string username, std::string password, bool is_student=false) {
+	bool login_verify(std::string username, std::string password, bool is_student = false) {
 		//在students或teatures中查找，储存格式为{"username": "password"}
 		std::string role = is_student ? "student" : "teacher";
 		if (accounts->find(role) == accounts->end()) {
@@ -64,7 +64,7 @@ public:
 		(*accounts)[role][username] = password;
 	}
 private:
-	json *accounts;
+	json* accounts;
 };
 /*
 科目json文件数据样例
@@ -98,7 +98,7 @@ public:
 		catch (json::parse_error) {
 			*subjects = json::object();
 			save();
-		}	
+		}
 	}
 	~SubjectsDatabase() {
 		// 写入subjects.json文件
@@ -112,10 +112,15 @@ public:
 		o << *subjects;
 	}
 
-	void add_subject(std::string subject_code, std::string subject_name) {
+	std::string add_subject(std::string subject_code, std::string subject_name) {
 		// 生成课程id
 		std::string subject_id = std::to_string(subjects->size() + 1);
+		// 检查递增课程id，直到找到一个未被使用的id
+		while (subjects->find(subject_id) != subjects->end()) {
+			subject_id = std::to_string(std::stoi(subject_id) + 1);
+		}
 		(*subjects)[subject_id] = { subject_code, subject_name, json::object() };
+		return subject_id;
 	}
 	void add_item(std::string subject_id, std::string item_name, int weight) {
 		(*subjects)[subject_id][2][item_name] = weight;
@@ -131,7 +136,7 @@ public:
 	}
 
 	std::string* get_subject_ids() {
-		std::string *ids = new std::string[subjects->size()];
+		std::string* ids = new std::string[subjects->size()];
 		int i = 0;
 		for (json::iterator it = subjects->begin(); it != subjects->end(); ++it) {
 			ids[i++] = it.key();
@@ -176,19 +181,35 @@ public:
 	json::iterator end() {
 		return subjects->end();
 	}
+
+	void set_subject_code(std::string subject_id, std::string subject_code) {
+		(*subjects)[subject_id][0] = subject_code;
+	}
+	void set_subject_name(std::string subject_id, std::string subject_name) {
+		(*subjects)[subject_id][1] = subject_name;
+	}
+	void set_items(std::string subject_id, std::map<std::string, int> items) {
+		(*subjects)[subject_id][2] = json::object();
+		for (std::map<std::string, int>::iterator it = items.begin(); it != items.end(); ++it) {
+			(*subjects)[subject_id][2][it->first] = it->second;
+		}
+	}
+	void clear_items(std::string subject_id) {
+		(*subjects)[subject_id][2] = json::object();
+	}
 private:
-	json *subjects;
+	json* subjects;
 };
 /*
 格式说明
 {
-    "2023111788":["傅逸凡", {
-        "1":{
-            "平时成绩": 100,
-            "期中成绩": 100,
-            "期末成绩": 100
-        }
-    }]
+	"2023111788":["傅逸凡", {
+		"1":{
+			"平时成绩": 100,
+			"期中成绩": 100,
+			"期末成绩": 100
+		}
+	}]
 }
 2023111788.学号
 傅逸凡.姓名
@@ -276,6 +297,9 @@ public:
 		catch (json::out_of_range) {
 			return -1;
 		}
+		catch (json::type_error) {
+			return -1;
+		}
 	}
 	json::iterator begin() {
 		return performance->begin();
@@ -305,12 +329,23 @@ public:
 				return -1;
 			}
 			total_score += socre * it->second;
-			total_weight += it->second;
 		}
-		return total_score / total_weight;
+		return total_score / 100;
+	}
+
+	size_t get_student_count(std::string subject_id) {
+		size_t count = 0;
+		for (json::iterator it = performance->begin(); it != performance->end(); ++it) {
+			// 如果该学生没有该科目的成绩，则跳过
+			if ((*performance)[it.key()][1].find(subject_id) == (*performance)[it.key()][1].end()) {
+				continue;
+			}
+			count++;
+		}
+		return count;
 	}
 
 private:
-	json *performance;
-	SubjectsDatabase *subjects_db;
+	json* performance;
+	SubjectsDatabase* subjects_db;
 };
