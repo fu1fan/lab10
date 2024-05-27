@@ -42,6 +42,23 @@ Overview::Overview(QWidget* parent)
 
 	connect(ui.loadButton, &QPushButton::clicked, this, &Overview::update_data);
 
+	update_subjects();
+
+	//connect(this, &Overview::showEvent, this, &Overview::update_subjects);
+}
+
+Overview::~Overview()
+{
+	delete chart;
+	// delete set0;
+	// delete series;
+	// delete axisX;
+	// delete axisY;
+
+}
+
+void Overview::update_subjects() {
+	ui.subjectBox->clear();
 	if (subjects_db->get_subject_count() == 0)
 	{
 		ui.subjectBox->addItem("目前无科目");
@@ -56,21 +73,12 @@ Overview::Overview(QWidget* parent)
 	}
 }
 
-Overview::~Overview()
-{
-	delete chart;
-	delete set0;
-	delete series;
-	delete axisX;
-	delete axisY;
-
-}
-
 void Overview::update_data()
 {
 	// 清空counts
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 5; i++)
 	{
+		//counts[i] = 0;
 		counts[i] = 0;
 	}
 	string subject_it = subjects_db->get_subject_id(ui.subjectBox->currentIndex());

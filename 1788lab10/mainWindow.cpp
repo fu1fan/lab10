@@ -44,4 +44,7 @@ void mainWindow::onButtonClicked(QAbstractButton* button)
 {
 	int id = buttonGroup->id(button);
 	ui.stackedWidget->setCurrentIndex(id);
+	if (id == 0) {
+		overview->update_subjects();
+	}
 }

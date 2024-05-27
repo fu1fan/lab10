@@ -26,5 +26,5 @@ private:
 
 public slots:
 	void update_data();
-	
+	void update_subjects();
 };
