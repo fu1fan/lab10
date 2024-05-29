@@ -56,6 +56,7 @@ Setting::~Setting()
 void Setting::select_subject(const QModelIndex& index)
 {
 	size_t subject_index = index.row();
+	selected_subject_id = subjects_db->get_subject_id(subject_index);
 	std::string id = subjects_db->get_subject_id(subject_index);
 
 	ui.lineEdit->setText(QString::fromStdString(subjects_db->get_subject_code(id)));
@@ -180,7 +181,7 @@ bool Setting::check_existing_student(std::string subject_id) {
 void Setting::apply() {
 	// 先检查总权重是否为100
 	int count_up = 0;
-	std::string id = subjects_db->get_subject_id(ui.listView->currentIndex().row());
+	std::string id = selected_subject_id;
 	for (int i = 0; i < items_tb->rowCount(); i++) {
 		count_up += items_tb->item(i, 1)->text().toInt();
 	}
@@ -219,4 +220,5 @@ void Setting::apply() {
 	}
 	subjects_m->setStringList(*subjects_l);
 	ui.listView->setModel(subjects_m);
+	// 重新选中当前课程
 }

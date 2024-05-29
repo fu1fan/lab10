@@ -4,6 +4,7 @@
 #include "ui_setting.h"
 #include <QStringListModel>
 #include <QStandardItemModel>
+#include <string>
 
 class Setting : public QWidget
 {
@@ -18,6 +19,7 @@ private:
 	QStringListModel *subjects_m;
 	QStringList *subjects_l;
 	QStandardItemModel *items_tb;
+	std::string selected_subject_id;
 	bool check_existing_student(std::string subject_id);
 
 public slots:

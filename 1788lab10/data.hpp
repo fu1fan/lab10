@@ -197,9 +197,15 @@ public:
 	}
 
 	void set_subject_code(std::string subject_id, std::string subject_code) {
+		if(subject_id==""){
+			subject_id = "??";
+		}
 		(*subjects)[subject_id][0] = subject_code;
 	}
 	void set_subject_name(std::string subject_id, std::string subject_name) {
+		if (subject_id == "") {
+			subject_id = "??";
+		}
 		(*subjects)[subject_id][1] = subject_name;
 	}
 	void set_items(std::string subject_id, std::map<std::string, int> items) {
@@ -368,7 +374,7 @@ public:
 		size_t count = 0;
 		for (json::iterator it = performance->begin(); it != performance->end(); ++it) {
 			// 如果该学生没有该科目的成绩，则跳过
-			if ((*performance)[it.key()][1].find(subject_id) == (*performance)[it.key()][1].end()) {
+			if (student_has_subject(it.key(), subject_id)) {
 				continue;
 			}
 			count++;
