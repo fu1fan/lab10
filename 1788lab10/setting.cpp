@@ -50,6 +50,7 @@ Setting::~Setting()
 {
 	delete subjects_m;
 	delete subjects_l;
+	delete items_tb;
 }
 
 void Setting::select_subject(const QModelIndex& index)

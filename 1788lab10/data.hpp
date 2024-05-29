@@ -63,6 +63,20 @@ public:
 		std::string role = is_student ? "student" : "teacher";
 		(*accounts)[role][username] = password;
 	}
+	void add_account(std::string username, std::string password, bool is_student = false) {
+		//在students或teatures中查找，储存格式为{"username": "password"}
+		std::string role = is_student ? "student" : "teacher";
+		(*accounts)[role][username] = password;
+	}
+	void delete_account(std::string username, bool is_student = false) {
+		//在students或teatures中查找，储存格式为{"username": "password"}
+		std::string role = is_student ? "student" : "teacher";
+		// 检查是否存在该用户
+		if ((*accounts)[role].find(username) == (*accounts)[role].end()) {
+			return;
+		}
+		(*accounts)[role].erase(username);
+	}
 private:
 	json* accounts;
 };
@@ -251,7 +265,8 @@ public:
 		int i = 0;
 		for (json::iterator it = performance->begin(); it != performance->end(); ++it) {
 			if (i == index) {
-				return it.key();
+				auto t = it.key();
+				return t;
 			}
 			i++;
 		}
@@ -260,11 +275,19 @@ public:
 	string get_student_id(json::iterator index) {
 		return index.key();
 	}
+	string get_student_id(string student_name) {
+		for (json::iterator it = performance->begin(); it != performance->end(); ++it) {
+			if ((*performance)[it.key()][0] == student_name) {
+				return it.key();
+			}
+		}
+		return "";
+	}
+	bool has_student_id(std::string student_id) {
+		return performance->find(student_id) != performance->end();
+	}
 	void add_student(std::string student_id, std::string student_name) {
 		(*performance)[student_id] = { student_name, json::object() };
-	}
-	void add_subject(std::string student_id, std::string subject_id) {
-		(*performance)[student_id][1][subject_id] = json::object();
 	}
 	void delete_student(std::string student_id) {
 		performance->erase(student_id);
@@ -272,8 +295,15 @@ public:
 	void delete_subject(std::string student_id, std::string subject_id) {
 		(*performance)[student_id][1].erase(subject_id);
 	}
-	void set_score(std::string student_id, std::string subject_id, std::string item_name, int score) {
+	void set_score(std::string student_id, std::string subject_id, std::string item_name, float score) {
 		(*performance)[student_id][1][subject_id][item_name] = score;
+	}
+	void set_student_id(std::string student_id, std::string new_student_id) {
+		(*performance)[new_student_id] = (*performance)[student_id];
+		performance->erase(student_id);
+	}
+	void set_student_name(std::string student_id, std::string student_name) {
+		(*performance)[student_id][0] = student_name;
 	}
 	std::string get_student_name(std::string student_id) {
 		return (*performance)[student_id][0];
@@ -281,7 +311,8 @@ public:
 	std::string get_student_name(json::iterator student_id) {
 		return (*performance)[student_id.key()][0];
 	}
-	int get_score(std::string student_id, std::string subject_id, std::string item_name) {
+
+	float get_score(std::string student_id, std::string subject_id, std::string item_name) {
 		try {
 			return (*performance)[student_id][1][subject_id][item_name];
 		}
@@ -289,7 +320,7 @@ public:
 			return -1;
 		}
 	}
-	int get_score(json::iterator student_id, std::string subject_id, std::string item_name) {
+	float get_score(json::iterator student_id, std::string subject_id, std::string item_name) {
 		auto t = student_id.key();
 		try {
 			return (*performance)[student_id.key()][1][subject_id][item_name];
@@ -343,6 +374,30 @@ public:
 			count++;
 		}
 		return count;
+	}
+
+	void remove_student_subject(std::string student_id, std::string subject_id) {
+		(*performance)[student_id][1].erase(subject_id);
+	}
+	void add_student_subject(std::string student_id, std::string subject_id) {
+		(*performance)[student_id][1][subject_id] = json::object();
+		// 初始化各项分数为0
+		// 获取科目评分项
+		std::map<std::string, int> items = subjects_db->get_subject_items(subject_id);
+		for (std::map<std::string, int>::iterator it = items.begin(); it != items.end(); ++it) {
+			(*performance)[student_id][1][subject_id][it->first] = 0;
+		}
+
+	}
+	bool student_has_subject(std::string student_id, std::string subject_id) {
+		// 一一对比评分项目是否正确
+		std::map<std::string, int> items = subjects_db->get_subject_items(subject_id);
+		for (std::map<std::string, int>::iterator it = items.begin(); it != items.end(); ++it) {
+			if ((*performance)[student_id][1][subject_id].find(it->first) == (*performance)[student_id][1][subject_id].end()) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 private:

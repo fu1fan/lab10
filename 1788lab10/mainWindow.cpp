@@ -47,4 +47,7 @@ void mainWindow::onButtonClicked(QAbstractButton* button)
 	if (id == 0) {
 		overview->update_subjects();
 	}
+	else if (id == 2) {
+		input->update_subjects();
+	}
 }
