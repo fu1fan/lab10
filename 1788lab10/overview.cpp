@@ -89,6 +89,11 @@ void Overview::update_data()
 	int count = 0;
 	for (json::iterator it = performance_db->begin(); it != performance_db->end(); ++it)
 	{
+		auto n = it.key();
+		if (performance_db->student_has_subject(it, subject_it) == false)
+		{
+			continue;
+		}
 		float score = performance_db->calculate_score(it, subject_it);
 		if (score == -1) {
 			continue;

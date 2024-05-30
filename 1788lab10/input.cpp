@@ -52,7 +52,8 @@ void Input::select_subject(int index)
 	}
 	subjects_l->clear();
 	std::string id = subjects_db->get_subject_id(index);
-	size_t count = performance_db->get_student_count(id);
+	size_t count = performance_db->get_all_student_cout();
+	size_t ex = 0;
 
 	std::string student_id;
 
@@ -65,6 +66,7 @@ void Input::select_subject(int index)
 		{
 			continue;
 		}
+		ex++;
 		subjects_l->append(
 			QString::fromStdString(
 				performance_db->get_student_name(student_id)
@@ -76,6 +78,7 @@ void Input::select_subject(int index)
 	subjects_m->setStringList(*subjects_l);
 	ui.studentsView->setModel(subjects_m);
 	// 刷新列表
+	ui.label_12->setText("共计：" + QString::number(ex));
 }
 
 void Input::update_subjects() {

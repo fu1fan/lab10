@@ -375,11 +375,14 @@ public:
 		for (json::iterator it = performance->begin(); it != performance->end(); ++it) {
 			// 如果该学生没有该科目的成绩，则跳过
 			if (student_has_subject(it.key(), subject_id)) {
-				continue;
-			}
-			count++;
+				count++;
+			}	
 		}
 		return count;
+	}
+	size_t get_all_student_cout() {
+		// 返回总学生数量
+		return performance->size();
 	}
 
 	void remove_student_subject(std::string student_id, std::string subject_id) {
@@ -400,6 +403,16 @@ public:
 		std::map<std::string, int> items = subjects_db->get_subject_items(subject_id);
 		for (std::map<std::string, int>::iterator it = items.begin(); it != items.end(); ++it) {
 			if ((*performance)[student_id][1][subject_id].find(it->first) == (*performance)[student_id][1][subject_id].end()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	bool student_has_subject(json::iterator student_id, std::string subject_id) {
+		// 一一对比评分项目是否正确
+		std::map<std::string, int> items = subjects_db->get_subject_items(subject_id);
+		for (std::map<std::string, int>::iterator it = items.begin(); it != items.end(); ++it) {
+			if ((*performance)[student_id.key()][1][subject_id].find(it->first) == (*performance)[student_id.key()][1][subject_id].end()) {
 				return false;
 			}
 		}
