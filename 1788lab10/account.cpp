@@ -16,6 +16,11 @@ Account::~Account()
 
 void Account::set_username()
 {
+	if (account_db->is_student()) {
+		// 禁止修改学生账号
+		QMessageBox::warning(this, "错误", "学生账号无法修改");
+		return;
+	}
 	string new_username = ui.lineEdit->text().toStdString();
 	bool is_student = account_db->is_student();
 	if (account_db->exist(new_username, is_student)) {
@@ -58,4 +63,5 @@ void Account::set_password()
 void Account::update_account()
 {
 	ui.lineEdit->setText(QString::fromStdString(account_db->get_username()));
+	
 }
