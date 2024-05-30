@@ -16,6 +16,7 @@ lab10::lab10(QWidget *parent)
 	account_db = new AccountDatabase();
 
     main_window = new mainWindow();
+	student_window = new StudentWindow();
     
     connect(ui.loginButton, SIGNAL(clicked()), this, SLOT(login_slot()));
 }
@@ -30,8 +31,15 @@ void lab10::login_slot() {
 	string password = ui.passwordEdit->text().toStdString();
 	bool is_student = ui.roleBox->currentIndex() == 1;
     if (account_db->login_verify(username, password, is_student)) {
-        main_window->show();
-        this->hide();
+        if (is_student) {
+            student_window->show();
+            this->hide();
+        }
+        else
+        {
+            main_window->show();
+            this->hide();
+        }
 	}
     else {
 		// 弹窗

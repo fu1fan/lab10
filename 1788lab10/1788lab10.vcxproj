@@ -94,10 +94,12 @@
   <ItemGroup>
     <ClCompile Include="account.cpp" />
     <ClCompile Include="input.cpp" />
+    <ClCompile Include="lookup.cpp" />
     <ClCompile Include="mainWindow.cpp" />
     <ClCompile Include="overview.cpp" />
     <ClCompile Include="setting.cpp" />
     <ClCompile Include="sha-256.cpp" />
+    <ClCompile Include="studentwindow.cpp" />
     <QtRcc Include="lab10.qrc" />
     <QtUic Include="account.ui" />
     <QtUic Include="input.ui" />
@@ -105,14 +107,18 @@
     <QtMoc Include="lab10.h" />
     <ClCompile Include="lab10.cpp" />
     <ClCompile Include="main.cpp" />
+    <QtUic Include="lookup.ui" />
     <QtUic Include="mainWindow.ui" />
     <QtUic Include="overview.ui" />
     <QtUic Include="setting.ui" />
+    <QtUic Include="studentwindow.ui" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="src\logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="studentwindow.h" />
+    <QtMoc Include="lookup.h" />
     <ClInclude Include="sha-256.h" />
     <QtMoc Include="account.h" />
     <ClInclude Include="common.h" />

@@ -61,6 +61,12 @@
     <ClCompile Include="sha-256.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="lookup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="studentwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="src\logo.png">
@@ -94,6 +100,12 @@
     <QtMoc Include="account.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="lookup.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="studentwindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="mainWindow.ui">
@@ -109,6 +121,12 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="input.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="lookup.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="studentwindow.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
