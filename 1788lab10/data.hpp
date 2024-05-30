@@ -398,7 +398,7 @@ public:
 			if (role == "student") {
 				if (performance_db->is_student(username)) {
 					// 新建学生账户，初始密码123456
-					add_account(username, "123456");
+					add_account(username, "123456", true);
 					save();
 					return password == "123456";
 				}
@@ -423,7 +423,7 @@ public:
 		this->username = username;
 		save();
 	}
-	void add_account(std::string username, std::string password, bool is_student = false) {
+	void add_account(std::string username, std::string password, bool is_student) {
 		//在students或teatures中查找，储存格式为{"username": "password"}
 		std::string role = is_student ? "student" : "teacher";
 		(*accounts)[role][username] = sha256(password);
