@@ -17,8 +17,8 @@ mainWindow::mainWindow(QWidget *parent)
 	ui.stackedWidget->addWidget(setting);
 	input = new Input();
 	ui.stackedWidget->addWidget(input);
-	student = new Student();
-	ui.stackedWidget->addWidget(student);
+	account = new Account();
+	ui.stackedWidget->addWidget(account);
 
 	buttonGroup = new QButtonGroup(this);
 	buttonGroup->addButton(ui.overviewButton, 0);
@@ -36,7 +36,7 @@ mainWindow::~mainWindow()
 	delete overview;
 	delete setting;
 	delete input;
-	delete student;
+	delete account;
 	delete buttonGroup;
 }
 

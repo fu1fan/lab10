@@ -92,12 +92,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="account.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="mainWindow.cpp" />
     <ClCompile Include="overview.cpp" />
     <ClCompile Include="setting.cpp" />
-    <ClCompile Include="student.cpp" />
     <QtRcc Include="lab10.qrc" />
+    <QtUic Include="account.ui" />
     <QtUic Include="input.ui" />
     <QtUic Include="lab10.ui" />
     <QtMoc Include="lab10.h" />
@@ -106,15 +107,14 @@
     <QtUic Include="mainWindow.ui" />
     <QtUic Include="overview.ui" />
     <QtUic Include="setting.ui" />
-    <QtUic Include="student.ui" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="src\logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="account.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="data.hpp" />
-    <QtMoc Include="student.h" />
     <QtMoc Include="input.h" />
     <ClInclude Include="login.hpp" />
     <QtMoc Include="setting.h" />

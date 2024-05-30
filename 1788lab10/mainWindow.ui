@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1205</width>
-    <height>718</height>
+    <height>715</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -266,10 +266,10 @@ QToolButton:hover,QToolButton:pressed,QToolButton:checked{
             </size>
            </property>
            <property name="text">
-            <string>学生浏览</string>
+            <string>账户设置</string>
            </property>
            <property name="icon">
-            <iconset theme="media-seek-forward"/>
+            <iconset theme="document-properties"/>
            </property>
            <property name="iconSize">
             <size>

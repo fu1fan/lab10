@@ -55,7 +55,7 @@
     <ClCompile Include="input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="student.cpp">
+    <ClCompile Include="account.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -88,7 +88,7 @@
     <QtMoc Include="input.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="student.h">
+    <QtMoc Include="account.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -105,7 +105,7 @@
     <QtUic Include="input.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="student.ui">
+    <QtUic Include="account.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

@@ -6,7 +6,7 @@
 #include "overview.h"
 #include "setting.h"
 #include "input.h"
-#include "student.h"
+#include "account.h"
 #include "common.h"
 
 class mainWindow : public QMainWindow
@@ -22,7 +22,7 @@ private:
 	Overview* overview;
 	Setting* setting;
 	Input* input;
-	Student* student;
+	Account* account;
 	QButtonGroup* buttonGroup;
 public slots:
 	void onButtonClicked(QAbstractButton* button);

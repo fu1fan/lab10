@@ -259,7 +259,7 @@
              <string/>
             </property>
             <property name="echoMode">
-             <enum>QLineEdit::EchoMode::Password</enum>
+             <enum>QLineEdit::EchoMode::PasswordEchoOnEdit</enum>
             </property>
            </widget>
           </item>
