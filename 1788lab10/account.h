@@ -13,4 +13,9 @@ public:
 
 private:
 	Ui::AccountClass ui;
+
+public slots:
+	void update_account();
+	void set_username();
+	void set_password();
 };

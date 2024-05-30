@@ -97,6 +97,7 @@
     <ClCompile Include="mainWindow.cpp" />
     <ClCompile Include="overview.cpp" />
     <ClCompile Include="setting.cpp" />
+    <ClCompile Include="sha-256.cpp" />
     <QtRcc Include="lab10.qrc" />
     <QtUic Include="account.ui" />
     <QtUic Include="input.ui" />
@@ -112,11 +113,11 @@
     <Image Include="src\logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="sha-256.h" />
     <QtMoc Include="account.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="data.hpp" />
     <QtMoc Include="input.h" />
-    <ClInclude Include="login.hpp" />
     <QtMoc Include="setting.h" />
     <QtMoc Include="overview.h" />
     <QtMoc Include="mainWindow.h" />

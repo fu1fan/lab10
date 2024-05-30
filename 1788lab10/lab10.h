@@ -15,7 +15,6 @@ public:
 
 private:
     Ui::lab10Class ui;
-    Login* login;
     mainWindow* main_window;
 public slots:
     void login_slot();

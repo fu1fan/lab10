@@ -1,15 +1,9 @@
 #include "mainWindow.h"
 
-SubjectsDatabase* subjects_db = nullptr;
-PerformanceDatabase * performance_db = nullptr;
-
 mainWindow::mainWindow(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
-
-	subjects_db = new SubjectsDatabase();
-	performance_db = new PerformanceDatabase(subjects_db);
 
 	overview = new Overview();
 	ui.stackedWidget->addWidget(overview);
@@ -49,5 +43,8 @@ void mainWindow::onButtonClicked(QAbstractButton* button)
 	}
 	else if (id == 2) {
 		input->update_subjects();
+	}
+	else if (id == 3) {
+		account->update_account();
 	}
 }

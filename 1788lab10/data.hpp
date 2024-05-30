@@ -6,80 +6,11 @@
 #include <vector>
 #include <map>
 #include "common.h"
+#include "sha-256.h"
 
 using json = nlohmann::json;
 using namespace std;
 
-class AccountDatabase
-{
-public:
-	AccountDatabase() {
-		// 读取accounts.json文件
-		std::ifstream i("accounts.json");
-		accounts = new json();
-		try {
-			i >> *accounts;
-			// 检查是否整体为一个字典，如果不是则初始化为空字典
-			if (!accounts->is_object()) {
-				*accounts = json::object();
-				(*accounts)["student"] = json::object();
-				(*accounts)["teacher"] = json::object();
-#ifdef ENABLE_ADMIN
-				(*accounts)["admin"] = "admin";
-#endif // ENABLE_ADMIN
-
-				save();
-			}
-		}
-		catch (json::parse_error) {
-			*accounts = json::object();
-			save();
-		}
-	}
-	~AccountDatabase() {
-		// 写入accounts.json文件
-		std::ofstream o("accounts.json");
-		o << *accounts;
-		delete accounts;
-	}
-	void save() {
-		// 写入accounts.json文件
-		std::ofstream o("accounts.json");
-		o << *accounts;
-	}
-	bool login_verify(std::string username, std::string password, bool is_student = false) {
-		//在students或teatures中查找，储存格式为{"username": "password"}
-		std::string role = is_student ? "student" : "teacher";
-		if (accounts->find(role) == accounts->end()) {
-			return false;
-		}
-		if ((*accounts)[role].find(username) == (*accounts)[role].end()) {
-			return false;
-		}
-		return (*accounts)[role][username] == password;
-	}
-	void set_password(std::string username, std::string password, bool is_student = false) {
-		//在students或teatures中查找，储存格式为{"username": "password"}
-		std::string role = is_student ? "student" : "teacher";
-		(*accounts)[role][username] = password;
-	}
-	void add_account(std::string username, std::string password, bool is_student = false) {
-		//在students或teatures中查找，储存格式为{"username": "password"}
-		std::string role = is_student ? "student" : "teacher";
-		(*accounts)[role][username] = password;
-	}
-	void delete_account(std::string username, bool is_student = false) {
-		//在students或teatures中查找，储存格式为{"username": "password"}
-		std::string role = is_student ? "student" : "teacher";
-		// 检查是否存在该用户
-		if ((*accounts)[role].find(username) == (*accounts)[role].end()) {
-			return;
-		}
-		(*accounts)[role].erase(username);
-	}
-private:
-	json* accounts;
-};
 /*
 科目json文件数据样例
 {
@@ -197,15 +128,9 @@ public:
 	}
 
 	void set_subject_code(std::string subject_id, std::string subject_code) {
-		if(subject_id==""){
-			subject_id = "??";
-		}
 		(*subjects)[subject_id][0] = subject_code;
 	}
 	void set_subject_name(std::string subject_id, std::string subject_name) {
-		if (subject_id == "") {
-			subject_id = "??";
-		}
 		(*subjects)[subject_id][1] = subject_name;
 	}
 	void set_items(std::string subject_id, std::map<std::string, int> items) {
@@ -220,6 +145,7 @@ public:
 private:
 	json* subjects;
 };
+
 /*
 格式说明
 {
@@ -376,7 +302,7 @@ public:
 			// 如果该学生没有该科目的成绩，则跳过
 			if (student_has_subject(it.key(), subject_id)) {
 				count++;
-			}	
+			}
 		}
 		return count;
 	}
@@ -418,8 +344,114 @@ public:
 		}
 		return true;
 	}
+	bool is_student(std::string student_id) {
+		// 检查是否是学生
+		return performance->find(student_id) != performance->end();
+	}
 
 private:
 	json* performance;
 	SubjectsDatabase* subjects_db;
 };
+
+extern PerformanceDatabase* performance_db;
+
+class AccountDatabase
+{
+public:
+	AccountDatabase() {
+		_is_student = false;
+		// 读取accounts.json文件
+		std::ifstream i("accounts.json");
+		accounts = new json();
+		try {
+			i >> *accounts;
+			// 检查是否存在student和teacher两个键，如果都存在就return
+			if (accounts->find("student") != accounts->end() && accounts->find("teacher") != accounts->end()) {
+				return;
+			}
+		}
+		catch (json::parse_error) {
+		}
+		// 初始化为空字典
+		*accounts = json::object();
+		(*accounts)["student"] = json::object();
+		(*accounts)["teacher"] = json::object();
+		(*accounts)["teacher"]["admin"] = sha256("123456"); // 默认管理员账户
+		save();
+	}
+	~AccountDatabase() {
+		// 写入accounts.json文件
+		std::ofstream o("accounts.json");
+		o << *accounts;
+		delete accounts;
+	}
+	void save() {
+		// 写入accounts.json文件
+		std::ofstream o("accounts.json");
+		o << *accounts;
+	}
+	bool login_verify(std::string username, std::string password, bool is_student) {
+		//在students或teatures中查找，储存格式为{"username": "password"}
+		std::string role = is_student ? "student" : "teacher";
+		if ((*accounts)[role].find(username) == (*accounts)[role].end()) {
+			if (role == "student") {
+				if (performance_db->is_student(username)) {
+					// 新建学生账户，初始密码123456
+					add_account(username, "123456");
+					save();
+					return password == "123456";
+				}
+			}
+			return false;
+		}
+		_is_student = is_student;
+		this->username = username;
+		return (*accounts)[role][username] == sha256(password);
+	}
+	void set_password(std::string username, std::string password, bool is_student = false) {
+		//在students或teatures中查找，储存格式为{"username": "password"}
+		std::string role = is_student ? "student" : "teacher";
+		(*accounts)[role][username] = sha256(password);
+		save();
+	}
+	void set_username(std::string username, bool is_student){
+		//在students或teatures中查找，储存格式为{"username": "password"}
+		std::string role = is_student ? "student" : "teacher";
+		(*accounts)[role][username] = (*accounts)[role][this->username];
+		(*accounts)[role].erase(this->username);
+		this->username = username;
+		save();
+	}
+	void add_account(std::string username, std::string password, bool is_student = false) {
+		//在students或teatures中查找，储存格式为{"username": "password"}
+		std::string role = is_student ? "student" : "teacher";
+		(*accounts)[role][username] = sha256(password);
+		save();
+	}
+	void delete_account(std::string username, bool is_student = false) {
+		//在students或teatures中查找，储存格式为{"username": "password"}
+		std::string role = is_student ? "student" : "teacher";
+		// 检查是否存在该用户
+		if ((*accounts)[role].find(username) == (*accounts)[role].end()) {
+			return;
+		}
+		(*accounts)[role].erase(username);
+		save();
+	}
+	bool is_student() {
+		return _is_student;
+	}
+	std::string get_username() {
+		return username;
+	}
+	bool exist(std::string username, bool is_student) {
+		std::string role = is_student ? "student" : "teacher";
+		return (*accounts)[role].find(username) != (*accounts)[role].end();
+	}
+private:
+	json* accounts;
+	bool _is_student;
+	std::string username;
+};
+
